@@ -1,0 +1,21 @@
+<%- include("header") -%>
+    <section>
+      <div class="title-body-container">
+        <h1>Home</h1>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Odit corrupti dolore illo atque qui aliquid! Ratione dolorem voluptas quos itaque magni, fugit alias! Consequatur, laborum ut! Est vel eaque beatae perferendis consequuntur provident ipsa reprehenderit adipisci. In placeat quasi, voluptatum non necessitatibus quo itaque excepturi repellendus facilis velit laborum exercitationem repudiandae vitae saepe autem alias nobis est ullam sint a reiciendis aspernatur, quod dolores veritatis? Iste laboriosam eveniet inventore quia excepturi consectetur iusto tempora, totam tenetur natus nemo non provident explicabo. Et ex perspiciatis laudantium sint doloribus voluptas provident labore quasi eveniet reiciendis! Ab quos non facere distinctio repellendus cumque!</p>
+      </div>
+      <div>
+        <% inputLists.forEach(inputList => { %>
+          <div>
+            <div>
+              <h2><%= inputList.title %></h2>
+            </div>
+            <div>
+              <p class="input-post"><%= inputList.post %></p>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+
+    </section>
+<%- include("footer") -%>
