@@ -4,7 +4,10 @@ const bodyParser = require("body-parser");
 const app = express();
 
 const inputListsArray = [];
-
+// let title;
+// let inputTitle;
+// let inputPost;
+// console.log(inputTitle);
 app.use(express.static("public"));
 
 app.use(bodyParser.urlencoded({extended: true}));
@@ -23,10 +26,39 @@ app.post("/", (req, res) => {
     post: inputPost
   }
 
+  // const url = `/post/${inputTitle}`;
+
   inputListsArray.push(inputs);
 
   res.redirect("/");
 })
+
+app.get("/post", (req, res) => { // ! Pwede sila isave sa variable?
+  const inputTitle = req.query.title;
+  const inputPost = req.query.post;
+  console.log(inputTitle, inputPost)
+  res.render("post", {title: inputTitle, post: inputPost});
+})
+
+app.post("/post", (req, res) => {
+  const inputTitle = decodeURIComponent(req.body.inputTitle);
+  const inputPost = decodeURIComponent(req.body.inputPost);
+  const url = `/post?title=${inputTitle}&post=${inputPost}`;
+  
+  res.redirect(url);
+})
+
+// app.post(`/post/${title}`, (req, res) => {
+//   console.log("Testing")
+//   res.render("post", {title: inputTitle, post: inputPost});
+// })
+
+// function dynamicURL(route) {
+//     app.post(route, (req, res) => {
+//     console.log("test")
+//     res.render("post");
+//   })
+// }
 
 app.get("/compose", (req, res) => {
   res.render("compose");

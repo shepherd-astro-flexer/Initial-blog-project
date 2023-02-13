@@ -96,4 +96,7 @@ button {
 /* Render inputs*/
 
 /* Add class */
+.hidden {
+  display: none;
+}
 
