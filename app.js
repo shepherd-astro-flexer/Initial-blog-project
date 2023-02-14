@@ -1,13 +1,11 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-
+const ejs = require("ejs");
+const defaultContent = require(__dirname + `\\default-content.js`) // Since we are not installing a module using NPM(meaning we are creating our own module, and the module is NOT remote), then we must specify the location of the file that we are referrencing
 const app = express();
 
-const inputListsArray = [];
-// let title;
-// let inputTitle;
-// let inputPost;
-// console.log(inputTitle);
+const inputListsArray = []; // ! This should be at the top, so other functions can reach it
+
 app.use(express.static("public"));
 
 app.use(bodyParser.urlencoded({extended: true}));
@@ -15,61 +13,119 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
 
 app.get("/", (req, res) => {
-  res.render("index", {inputLists: inputListsArray});
+  res.render("testing", {inputLists: inputListsArray, homeContent: defaultContent.home});
 })
 
-app.post("/", (req, res) => {
-  const inputTitle = req.body.inputTitle;
-  const inputPost = req.body.inputPost;
-  const inputs = {
-    title: inputTitle,
-    post: inputPost
-  }
-
-  // const url = `/post/${inputTitle}`;
-
-  inputListsArray.push(inputs);
-
-  res.redirect("/");
-})
-
-app.get("/post", (req, res) => { // ! Pwede sila isave sa variable?
-  const inputTitle = req.query.title;
-  const inputPost = req.query.post;
-  console.log(inputTitle, inputPost)
-  res.render("post", {title: inputTitle, post: inputPost});
-})
-
-app.post("/post", (req, res) => {
-  const inputTitle = decodeURIComponent(req.body.inputTitle);
-  const inputPost = decodeURIComponent(req.body.inputPost);
-  const url = `/post?title=${inputTitle}&post=${inputPost}`;
+// app.post("/", (req, res) => {
   
-  res.redirect(url);
-})
+// })
 
-// app.post(`/post/${title}`, (req, res) => {
-//   console.log("Testing")
+// app.post(`/post`, (req, res) => {
+
+// })
+
+// app.get(`/post/${inputTitle}`, (req, res) => {
+//   res.render("post");
+// })
+
+// app.post("/post", (req, res) => {
+//   let inputTitle = req.body.inputTitle; // Pwede kong makita yung full na version nung text basta na encode ko na, kahit hindi ko pa i-decode, pero merong mga special characters na idadagdag ang node sa mga spaces
+//   const inputPost = req.body.inputPost;
+
+//   console.log(inputTitle, inputPost);
+//   res.render("post");
+//   res.redirect(`/post/${inputTitle}`);
+// })
+
+// app.get("/post", (req, res) => { // ! Pwede sila isave sa variable?
+//   const inputTitle = req.query.title;
+//   const inputPost = req.query.post;
 //   res.render("post", {title: inputTitle, post: inputPost});
 // })
 
-// function dynamicURL(route) {
-//     app.post(route, (req, res) => {
-//     console.log("test")
-//     res.render("post");
-//   })
-// }
+// app.post("/post", (req, res) => {
+//   const inputTitle = decodeURIComponent(req.body.inputTitle);
+//   const inputPost = decodeURIComponent(req.body.inputPost);
+//   const url = `/post?title=${inputTitle}&post=${inputPost}`;
+
+//   res.redirect(url);
+// })
+
+
+
+// app.get("/post/:topic", (req, res) => {
+  
+//   res.render("post")
+// })
+
+app.post("/post/:topic", (req, res) => { // ! By adding a : after the / means its a parameter. In this case, topic is the name of the parameter and it can be anything you want, then once you go to localhost:3000/post/mumbojumbo, it is so that you can create dynamic get and post request on the go
+  const inputTitle = decodeURIComponent(req.body.inputTitle);
+  const inputPost = decodeURIComponent(req.body.inputPost)
+  console.log(`This is from the /post/:topic route: ${req.params.topic}`)
+  // console.log(req.params.topic);
+  res.render("post", {
+    title: inputTitle,
+    post: inputPost
+  })
+})
+
+app.get("/post/:first-:second", (req, res) => { // ! Added a - to specify that a " "(space) should be a -
+  const first = req.params.first;
+  const second = req.params.second;
+  const combinedParam = `${first} ${second}`; // ! Concatenated the first and second param, and we must type in a - instead of empty space on the search bar e.g. localhost:3000/post/Day-1 when the title is Day 1, instead of typing /post/Day 1
+  inputListsArray.forEach(inputs => {
+    // const includes = inputs.title.includes(combinedParam);
+    // console.log(inputs.title);
+    // combinedParam === inputs.title || `${first} ${second}` === inputs.title || first === inputs.title)
+    if (inputs.title.includes(combinedParam)) { // ! We tested the req.params.topic and compared it to the inputs.title. If its the same, render the page with the input.title and input.post, if not then give an error message
+      console.log(`I'm on the if statement: req.params.first: ${typeof combinedParam}, inputs.title: ${typeof inputs.title}`)
+      res.render("post", {title: inputs.title, post: inputs.post})
+    } else {
+      console.log(req.statusCode, `I'm on the else statement. result is: ${typeof combinedParam} and ${typeof inputs.title}`)
+      // res.redirect("/post")
+    }
+  })
+})
+
+app.get("/post/:random", (req, res) => { // ! Added a - to specify that a " "(space) should be a -
+  const first = req.params.random;
+  inputListsArray.forEach(inputs => {
+    if (inputs.title.includes(first)) {
+      console.log("I'm on the if")
+      res.render("post", {title: inputs.title, post: inputs.post})
+    } else {
+      console.log("I'm on the else statement")
+      // res.redirect("/post")
+    }
+  })
+})
 
 app.get("/compose", (req, res) => {
   res.render("compose");
 })
 
+app.post("/compose", (req, res) => {
+  // const inputTitle = ; // ! Hindi na necessary na i-save pa sa variable, pwede namang rekta na sa object, kasi variable din naman ang 'name' ng object
+  const inputs = {
+    title: req.body.inputTitle,
+    post: req.body.inputPost
+  };
+
+  inputListsArray.push(inputs);
+
+  res.redirect("/"); // get request ang ginagawa ng redirect
+})
+
 app.get("/contact", (req, res) => {
-  res.render("contact-us");
+  res.render("contact-us", {contactContent: defaultContent.contact});
 })
 
 app.get("/about", (req, res) => {
-  res.render("about-us");
+  res.render("about-us", {aboutContent: defaultContent.about});
+})
+
+app.get("/sample", (req, res) => {
+  res.send("?");
 })
 
 app.listen(3000, () => {
