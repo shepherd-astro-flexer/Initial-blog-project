@@ -12,7 +12,7 @@
             </div>
             <div>
               <% if (inputList.post.length > 100) { %>
-                <p class="input-post"><%= inputList.post.slice(0, 101) + "..." %><form action="/post" method="POST"><input class="hidden" type="text" name="inputTitle" value=<%= encodeURIComponent(inputList.title) %>><button name="inputPost" value=<%= encodeURIComponent(inputList.post) %>>Read More</button></form></p>
+                <p class="input-post"><%= inputList.post.slice(0, 101) + "... "%><a class="truncate-post" href=/post/<%= ${inputList.title} %>></a></p>
               <% } else { %>
                 <p class="input-post"><%= inputList.post %></p>
               <% } %>
@@ -20,6 +20,6 @@
           </div>
         <% }) %>
       </div>
-
+      <!-- <form action="/post" method="POST"><input class="hidden" type="text" name="inputTitle" value=<#%= encodeURIComponent(inputList.title) %>><button name="inputPost" value=<%#= encodeURIComponent(inputList.post) %>>Read More</button></form></p> -->
     </section>
 <%- include("partials/footer") -%>

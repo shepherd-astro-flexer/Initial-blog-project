@@ -40,12 +40,12 @@ header {
   padding: 25px 100px 35px;
 }
 
-a {
+.navbar-anchor {
   text-decoration: none;
   color: rgb(146, 146, 146);
 }
 
-a:hover {
+.navbar-anchor:hover {
   cursor: pointer;
   color: darkgray;
 }
@@ -91,6 +91,16 @@ button {
   background-color: blue;
   border-radius: 4px;
   border: none;
+}
+
+.read-more-link {
+  color: rgb(45, 45, 243);
+  text-decoration: none;
+}
+
+.read-more-link:hover {
+  color:rgb(84, 84, 195);
+  text-decoration: underline;
 }
 
 /* Render inputs*/
